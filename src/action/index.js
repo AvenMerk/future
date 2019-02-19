@@ -11,7 +11,7 @@ export const receiveSmall = (json) => ({
     receivedAt: Date.now()
 });
 
-export const fetchCategory = () => (dispatch) => {
+export const fetchSmallData = () => (dispatch) => {
     dispatch(requestSmall());
     return fetch(`https://api.fedor-bystrov.me/workshop/category/list`)
         .then(
