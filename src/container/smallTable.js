@@ -2,7 +2,7 @@ import React from 'react';
 import {fetchSmallData} from '../action/index';
 import { connect } from 'react-redux';
 
-class TablePage extends React.Component {
+class SmallTable extends React.Component {
 
     componentDidMount() {
         const { dispatch } = this.props;
@@ -35,7 +35,7 @@ const mapStateToProps = state => {
 };
 
 // props из редьюсера мапятся в компоненту в этом методе
-export default connect(mapStateToProps)(TablePage);
+export default connect(mapStateToProps)(SmallTable);
 
 
 {/*{isEmpty*/}

@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import './App.css';
-import TablePage from './container/tablePage';
+import SmallTable from './container/smallTable';
+import FullTable from './container/fullTable';
+
 
 class App extends Component {
   render() {
     return (
       <div className="App">
-       <TablePage/>
+       <SmallTable/>
+       <FullTable/>
       </div>
     );
   }
