@@ -8,8 +8,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-       <SmallTable/>
-       {/*<FullTable/>*/}
+       {/*<SmallTable/>*/}
+       <FullTable/>
       </div>
     );
   }
