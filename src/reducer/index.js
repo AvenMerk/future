@@ -1,4 +1,5 @@
 import {RECEIVE_SMALL, REQUEST_SMALL} from "../action/index";
+import { combineReducers } from 'redux';
 
 const smallReducer = (state = {isFetching: false, smallData: []}, action) => {
     switch (action.type) {
