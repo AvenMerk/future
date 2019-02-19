@@ -1,6 +1,7 @@
 import React from 'react';
 import {fetchSmallData} from '../action/index';
 import { connect } from 'react-redux';
+import TableStroke from '../components/tableStroke';
 
 class SmallTable extends React.Component {
 
@@ -10,11 +11,22 @@ class SmallTable extends React.Component {
     }
 
     render() {
-        // const {smallData, isFetching} = this.props;
-        // const isEmpty = smallData.length === 0;
+        const {smallData, isFetching} = this.props;
+        const isEmpty = smallData.length === 0;
         return <React.Fragment>
-            <p>Table</p>
-        </React.Fragment>
+            {isEmpty
+                ? (isFetching ?
+                    <h2>
+                        Loading...</h2> : <h2>Empty.</h2>)
+                : <div style={{opacity: isFetching ? 0.5 : 1}}>
+                    <h2>Table</h2>
+                    {smallData.map((data, index) =>
+                        <TableStroke key={index} data={data}/>
+                        )
+                    }
+                </div>
+            }
+        </React.Fragment>;
     }
 }
 
@@ -36,13 +48,3 @@ const mapStateToProps = state => {
 
 // props из редьюсера мапятся в компоненту в этом методе
 export default connect(mapStateToProps)(SmallTable);
-
-
-{/*{isEmpty*/}
-{/*? (isFetching ?*/}
-{/*<h2>*/}
-{/*Loading...</h2> : <h2>Empty.</h2>)*/}
-{/*: <div style={{opacity: isFetching ? 0.5 : 1}}>*/}
-{/*<h2>Table</h2>*/}
-{/*</div>*/}
-{/*}*/}
