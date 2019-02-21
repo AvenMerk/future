@@ -25,8 +25,8 @@ class App extends Component {
   render() {
       return (
           <div className="aero-flex-container">
-              <SearchContainer/>
               {this.switchMode()}
+              <SearchContainer/>
           </div>
       );
   }
