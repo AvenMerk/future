@@ -1,8 +1,10 @@
 import React from 'react';
-import { fetchFullData } from '../action/index';
+import { fetchData } from '../action/index';
 import { connect } from 'react-redux';
 import TableStroke from "../components/tableStroke";
 import Button from "../components/button";
+import Grid from '@material-ui/core/Grid';
+
 
 class FullTable extends React.Component {
 
@@ -13,10 +15,16 @@ class FullTable extends React.Component {
     };
 
     componentDidMount() {
-        const { dispatch } = this.props;
-        dispatch(fetchFullData());
-
+        const { dispatch, selectedMode } = this.props;
+        dispatch(fetchData(selectedMode));
     }
+
+    // componentDidUpdate(prevProps) {
+    //     if (prevProps.selectedMode !== this.props.selectedMode) {
+    //         const { dispatch, selectedMode } = this.props;
+    //         dispatch(fetchData(selectedMode))
+    //     }
+    // }
 
     //TODO сделать расчет страниц при выборе большого объема данных
     setNumberOfPages = () => {
@@ -27,6 +35,8 @@ class FullTable extends React.Component {
             pages.push(i);
         }
         this.setState({pages: pages});
+        console.log(this.state.pages);
+
     };
 
     changePage = () => {
@@ -51,7 +61,7 @@ class FullTable extends React.Component {
                 ? (isFetching ?
                     <h2>
                         Loading...</h2> : <h2>Empty.</h2>)
-                : <div style={{opacity: isFetching ? 0.5 : 1}}>
+                : <Grid item xs={9}>
                     <h2>Table</h2>
                     <Button name="Create array" onClick={this.setNumberOfPages}/>
                     {this.state.pages.map((page, index) =>
@@ -59,7 +69,7 @@ class FullTable extends React.Component {
                     )}
 
                     {this.mapFullData(fullData)}
-                </div>
+                </Grid>
             }
         </React.Fragment>;
     }
@@ -67,7 +77,7 @@ class FullTable extends React.Component {
 
 // Функция, определяет что передать из редьюсера в props компоненты
 const mapStateToProps = state => {
-    const {fullReducer} = state;
+    const {fullReducer, selectedMode} = state;
     const {
         isFetching,
         lastUpdated,
@@ -78,6 +88,7 @@ const mapStateToProps = state => {
         isFetching,
         fullData,
         lastUpdated,
+        selectedMode
     }
 };
 

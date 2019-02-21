@@ -12,3 +12,8 @@
 .aero-centred {
   text-align: center;
 }
+
+.aero-flex-container {
+  display: flex;
+  flex-direction: row;
+}

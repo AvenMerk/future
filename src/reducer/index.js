@@ -1,6 +1,17 @@
-import {RECEIVE_SMALL, REQUEST_SMALL} from "../action/index";
+import {RECEIVE_SMALL, REQUEST_SMALL, SELECT_MODE} from "../action/index";
 import {RECEIVE_FULL, REQUEST_FULL} from "../action/index";
 import { combineReducers } from 'redux';
+
+import { SMALL } from '../container/searchContainer';
+
+const selectedMode = (state = SMALL, action) => {
+    switch (action.type) {
+        case SELECT_MODE:
+            return action.mode;
+        default:
+            return state;
+    }
+};
 
 const smallReducer = (state = {isFetching: false, smallData: []}, action) => {
     switch (action.type) {
@@ -43,4 +54,5 @@ const fullReducer = (state = {isFetching: false, fullData: []}, action) => {
 export default combineReducers({
     smallReducer,
     fullReducer,
+    selectedMode,
 })

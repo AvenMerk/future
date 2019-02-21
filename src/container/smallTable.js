@@ -1,13 +1,14 @@
 import React from 'react';
-import {fetchSmallData} from '../action/index';
+import {fetchData} from '../action/index';
 import { connect } from 'react-redux';
 import TableStroke from '../components/tableStroke';
+import Grid from '@material-ui/core/Grid';
 
 class SmallTable extends React.Component {
 
     componentDidMount() {
         const { dispatch } = this.props;
-        dispatch(fetchSmallData());
+        dispatch(fetchData());
     }
 
     render() {
@@ -18,13 +19,13 @@ class SmallTable extends React.Component {
                 ? (isFetching ?
                     <h2>
                         Loading...</h2> : <h2>Empty.</h2>)
-                : <div style={{opacity: isFetching ? 0.5 : 1}}>
-                    <h2>Table</h2>
+                : <Grid item xs={9}>
+                <h2>Table</h2>
                     {smallData.map((data, index) =>
                         <TableStroke key={index} data={data}/>
                         )
                     }
-                </div>
+                </Grid>
             }
         </React.Fragment>;
     }
