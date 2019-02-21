@@ -41,8 +41,9 @@ class FullTable extends React.Component {
 
     };
 
-    changePage = () => {
+    changePage = (e) => {
         this.setState({currentPage: this.state.currentPage + 1});
+        console.log(parseInt(e.target.innerText));
     };
 
     mapFullData = (fullData) => {
@@ -53,6 +54,16 @@ class FullTable extends React.Component {
         return newData.map((data, index) =>
             <TableStroke key={index} data={data}/>
         );
+    };
+
+    filterArray = (e) => {
+        const id = e.target.getAttribute('id');
+        console.log(id);
+        const ar = this.props.fullData.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
+            : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
+        console.log(this.props.fullData);
+        this.setState({currentArray: ar});
+        this.mapFullData(ar);
     };
 
     render() {
@@ -70,11 +81,41 @@ class FullTable extends React.Component {
                         <Button name={page} onClick={this.changePage} key={index}/>
                     )}
                     <Paper className="aero-flex">
-                        <Grid item xs={1}><p className="aero-centred">ID</p></Grid>
-                        <Grid item xs={2}><p className="aero-centred">First Name</p></Grid>
-                        <Grid item xs={3}><p className="aero-centred">Last Name</p></Grid>
-                        <Grid item xs={3}><p className="aero-centred">Email</p></Grid>
-                        <Grid item xs={3}><p className="aero-centred">Phone</p></Grid>
+                        <Grid item xs={1}>
+                            <p className="aero-centred"
+                               id='id'
+                               onClick={this.filterArray}>
+                                ID
+                            </p>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <p className="aero-centred"
+                               id='firstName'
+                               onClick={this.filterArray}>
+                                First Name
+                            </p>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <p className="aero-centred"
+                               id='lastName'
+                               onClick={this.filterArray}>
+                                Last Name
+                            </p>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <p className="aero-centred"
+                               id='email'
+                               onClick={this.filterArray}>
+                                Email
+                            </p>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <p className="aero-centred"
+                               id='phone'
+                               onClick={this.filterArray}>
+                                Phone
+                            </p>
+                        </Grid>
                     </Paper>
 
                     {this.mapFullData(fullData)}
