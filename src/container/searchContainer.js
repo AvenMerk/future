@@ -4,9 +4,6 @@ import Radio from '@material-ui/core/Radio';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
-import FullTable from './fullTable';
-import SmallTable from './smallTable';
-
 
 import { connect } from 'react-redux';
 import { selectMode, searchField } from '../action';
@@ -60,8 +57,6 @@ class SearchContainer extends React.Component {
                         </div>
                     </div>
                 </Grid>
-                {/*<FullTable/>*/}
-                {/*<SmallTable/>*/}
             </React.Fragment>
         );
     }

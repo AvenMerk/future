@@ -5,54 +5,50 @@ import TableStroke from "../components/tableStroke";
 import Button from "../components/button";
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-
-
+import Description from '../components/description';
 
 class FullTable extends React.Component {
 
     state = {
         currentPage: 0,
         showFields: 50,
+        numberOfPages: 20,
         pages: [],
     };
 
     componentDidMount() {
         const { dispatch, selectedMode } = this.props;
         dispatch(fetchData(selectedMode));
+        this.setNumberOfPages();
     }
 
-    // componentDidUpdate(prevProps) {
-    //     if (prevProps.selectedMode !== this.props.selectedMode) {
-    //         const { dispatch, selectedMode } = this.props;
-    //         dispatch(fetchData(selectedMode))
-    //     }
-    // }
+    componentDidUpdate(prevProps) {
+        if (prevProps.selectedMode !== this.props.selectedMode) {
+            const { dispatch, selectedMode } = this.props;
+            dispatch(fetchData(selectedMode))
+        }
+    }
 
     //TODO сделать расчет страниц при выборе большого объема данных
     setNumberOfPages = () => {
-        const numberOfPages = this.props.fullData.length / this.state.showFields;
-        console.log(numberOfPages);
         let pages = [];
-        for (let i = 1; i <= numberOfPages; i++) {
+        for (let i = 1; i <= this.state.numberOfPages; i++) {
             pages.push(i);
         }
         this.setState({pages: pages});
-        console.log(this.state.pages);
-
     };
 
     changePage = (e) => {
-        this.setState({currentPage: this.state.currentPage + 1});
-        console.log(parseInt(e.target.innerText));
+        this.setState({currentPage: parseInt(e.target.innerText) - 1});
     };
 
-    mapFullData = (fullData) => {
+    mapdata = (data) => {
         const { currentPage, showFields } = this.state;
         const beginning = currentPage*showFields;
         const end = (currentPage + 1)*showFields;
-        const newData = fullData.slice(beginning, end);
+        const newData = data.slice(beginning, end);
         return newData.map((data, index) =>
-            <TableStroke key={index} data={data}/>
+                <TableStroke data={data} key={index} />
         );
     };
 
@@ -65,12 +61,12 @@ class FullTable extends React.Component {
                 const ar = this.state.currentArray.sort((a,b) => (a[`${id}`] < b[`${id}`]) ? 1
                     : ((b[`${id}`] < a[`${id}`]) ? -1 : 0));
                 this.setState({currentArray: ar});
-                this.mapFullData(ar);
+                this.mapdata(ar);
             } else {
-                const ar = this.props.fullData.sort((a,b) => (a[`${id}`] < b[`${id}`]) ? 1
+                const ar = this.props.data.sort((a,b) => (a[`${id}`] < b[`${id}`]) ? 1
                     : ((b[`${id}`] < a[`${id}`]) ? -1 : 0));
                 this.setState({currentArray: ar});
-                this.mapFullData(ar);
+                this.mapdata(ar);
             }
         } else {
             this.setState({[`filtered${id}`]: true});
@@ -78,12 +74,12 @@ class FullTable extends React.Component {
                 const ar = this.state.currentArray.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
                     : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
                 this.setState({currentArray: ar});
-                this.mapFullData(ar);
+                this.mapdata(ar);
             } else {
-                const ar = this.props.fullData.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
+                const ar = this.props.data.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
                     : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
                 this.setState({currentArray: ar});
-                this.mapFullData(ar);
+                this.mapdata(ar);
             }
         }
     };
@@ -99,9 +95,13 @@ class FullTable extends React.Component {
         }
     };
 
+    moreInfo = (data) => {
+        return <Description data={data} />
+    };
+
     render() {
-        const {fullData, isFetching} = this.props;
-        const isEmpty = fullData.length === 0;
+        const {data, isFetching} = this.props;
+        const isEmpty = data.length === 0;
         return <React.Fragment>
             {isEmpty
                 ? (isFetching ?
@@ -109,7 +109,6 @@ class FullTable extends React.Component {
                         Loading...</Grid> : <Grid item xs={9}>Empty.</Grid>)
                 : <Grid item xs={9}>
                     <h2>Table</h2>
-                    <Button name="Create array" onClick={this.setNumberOfPages}/>
                     {this.state.pages.map((page, index) =>
                         <Button name={page} onClick={this.changePage} key={index}/>
                     )}
@@ -151,7 +150,7 @@ class FullTable extends React.Component {
                         </Grid>
                     </Paper>
 
-                    {this.mapFullData(fullData)}
+                    {this.mapdata(data)}
                 </Grid>
             }
         </React.Fragment>;
@@ -160,16 +159,17 @@ class FullTable extends React.Component {
 
 // Функция, определяет что передать из редьюсера в props компоненты
 const mapStateToProps = state => {
+    console.log('=====>', state);
     const {fullReducer, selectedMode, searchedField} = state;
     const {
         isFetching,
         lastUpdated,
-        fullData
-    } = fullReducer || {isFetching: true, fullData: []};
+        data
+    } = fullReducer || {isFetching: true, data: []};
 
     return {
         isFetching,
-        fullData,
+        data,
         lastUpdated,
         selectedMode,
         searchedField

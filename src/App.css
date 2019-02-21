@@ -45,3 +45,11 @@
 .aero-radio-container {
   padding-top: 2em;
 }
+
+.hidden {
+  display: none;
+}
+
+.show {
+  display: flex;
+}

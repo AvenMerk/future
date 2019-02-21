@@ -13,7 +13,7 @@ const selectedMode = (state = SMALL, action) => {
     }
 };
 
-const smallReducer = (state = {isFetching: false, smallData: []}, action) => {
+const smallReducer = (state = {isFetching: false, data: []}, action) => {
     switch (action.type) {
         case REQUEST_SMALL:
             return {
@@ -24,7 +24,7 @@ const smallReducer = (state = {isFetching: false, smallData: []}, action) => {
             return {
                 ...state,
                 isFetching: false,
-                smallData: action.smallData,
+                data: action.data,
                 lastUpdated: action.receivedAt
             };
         default:
@@ -32,7 +32,7 @@ const smallReducer = (state = {isFetching: false, smallData: []}, action) => {
     }
 };
 
-const fullReducer = (state = {isFetching: false, fullData: []}, action) => {
+const fullReducer = (state = {isFetching: false, data: []}, action) => {
     switch (action.type) {
         case REQUEST_FULL:
             return {
@@ -43,7 +43,7 @@ const fullReducer = (state = {isFetching: false, fullData: []}, action) => {
             return {
                 ...state,
                 isFetching: false,
-                fullData: action.fullData,
+                data: action.data,
                 lastUpdated: action.receivedAt
             };
         default:

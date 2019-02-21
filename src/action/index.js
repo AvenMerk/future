@@ -25,9 +25,9 @@ export const requestSmall = () => ({
     type: REQUEST_SMALL
 });
 
-export const receiveSmall = (json) => ({
+export const receiveSmall = (data) => ({
     type: RECEIVE_SMALL,
-    smallData: json,
+    data,
     receivedAt: Date.now()
 });
 
@@ -35,9 +35,9 @@ export const requestFull = () => ({
     type: REQUEST_FULL
 });
 
-export const receiveFull = (json) => ({
+export const receiveFull = (data) => ({
     type: RECEIVE_FULL,
-    fullData: json,
+    data,
     receivedAt: Date.now()
 });
 

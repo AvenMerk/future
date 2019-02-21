@@ -2,8 +2,8 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { applyMiddleware, createStore } from 'redux';
-import { Provider } from 'react-redux';
+import {applyMiddleware, createStore} from 'redux';
+import {Provider} from 'react-redux';
 import reducer from './reducer';
 import thunk from 'redux-thunk';
 import {createLogger} from 'redux-logger';
@@ -19,8 +19,8 @@ const store = createStore(
 );
 
 ReactDOM.render(<Provider store={store}>
-                    <App/>
-                </Provider>,
-                document.getElementById('root')
+        <App/>
+    </Provider>,
+    document.getElementById('root')
 );
 
