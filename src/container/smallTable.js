@@ -13,6 +13,22 @@ class SmallTable extends React.Component {
         dispatch(fetchData());
     }
 
+    filterArray = (e) => {
+        const id = e.target.getAttribute('id');
+        console.log(id);
+        const ar = this.props.smallData.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
+            : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
+        this.setState({currentArray: ar});
+        console.log(ar);
+        this.renderArray(ar);
+    };
+
+    renderArray = (smallData) => {
+        return smallData.map((data, index) =>
+            <TableStroke key={index} data={data}/>
+        )
+    };
+
     render() {
         const {smallData, isFetching} = this.props;
         const isEmpty = smallData.length === 0;
@@ -24,16 +40,43 @@ class SmallTable extends React.Component {
                 : <Grid item xs={9}>
                 <h2>Table</h2>
                     <Paper className="aero-flex">
-                        <Grid item xs={1}><p className="aero-centred">ID</p></Grid>
-                        <Grid item xs={2}><p className="aero-centred">First Name</p></Grid>
-                        <Grid item xs={3}><p className="aero-centred">Last Name</p></Grid>
-                        <Grid item xs={3}><p className="aero-centred">Email</p></Grid>
-                        <Grid item xs={3}><p className="aero-centred">Phone</p></Grid>
+                        <Grid item xs={1}>
+                            <p className="aero-centred"
+                               id='id'
+                               onClick={this.filterArray}>
+                                ID
+                            </p>
+                        </Grid>
+                        <Grid item xs={2}>
+                            <p className="aero-centred"
+                               id='firstName'
+                               onClick={this.filterArray}>
+                                First Name
+                            </p>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <p className="aero-centred"
+                               id='lastName'
+                               onClick={this.filterArray}>
+                                Last Name
+                            </p>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <p className="aero-centred"
+                               id='email'
+                               onClick={this.filterArray}>
+                                Email
+                            </p>
+                        </Grid>
+                        <Grid item xs={3}>
+                            <p className="aero-centred"
+                               id='phone'
+                               onClick={this.filterArray}>
+                                Phone
+                            </p>
+                        </Grid>
                     </Paper>
-                    {smallData.map((data, index) =>
-                        <TableStroke key={index} data={data}/>
-                        )
-                    }
+                    {this.renderArray(smallData)}
                 </Grid>
             }
         </React.Fragment>;
