@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import './App.css';
-import FullTable from './container/fullTable';
+import FullTable from './container/tableContainer';
 import SearchContainer from './container/searchContainer';
 
 export default class App extends Component {

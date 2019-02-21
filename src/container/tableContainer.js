@@ -7,7 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Description from '../components/description';
 
-class FullTable extends React.Component {
+class TableContainer extends React.Component {
 
     state = {
         currentPage: 0,
@@ -25,7 +25,8 @@ class FullTable extends React.Component {
     componentDidUpdate(prevProps) {
         if (prevProps.selectedMode !== this.props.selectedMode) {
             const { dispatch, selectedMode } = this.props;
-            dispatch(fetchData(selectedMode))
+            dispatch(fetchData(selectedMode));
+            this.setNumberOfPages();
         }
     }
 
@@ -35,7 +36,7 @@ class FullTable extends React.Component {
         for (let i = 1; i <= this.state.numberOfPages; i++) {
             pages.push(i);
         }
-        this.setState({pages: pages});
+        this.setState({pages});
     };
 
     changePage = (e) => {
@@ -160,12 +161,12 @@ class FullTable extends React.Component {
 // Функция, определяет что передать из редьюсера в props компоненты
 const mapStateToProps = state => {
     console.log('=====>', state);
-    const {fullReducer, selectedMode, searchedField} = state;
+    const {tableDataReducer, selectedMode, searchedField} = state;
     const {
         isFetching,
         lastUpdated,
         data
-    } = fullReducer || {isFetching: true, data: []};
+    } = tableDataReducer || {isFetching: true, data: []};
 
     return {
         isFetching,
@@ -176,5 +177,4 @@ const mapStateToProps = state => {
     }
 };
 
-// props из редьюсера мапятся в компоненту в этом методе
-export default connect(mapStateToProps)(FullTable);
+export default connect(mapStateToProps)(TableContainer);
