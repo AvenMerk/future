@@ -55,34 +55,28 @@ class TableContainer extends React.Component {
         );
     };
 
-    filterArray = (e) => {
-        const id = e.target.getAttribute('id');
-        console.log(id);
-        if (this.state[`filtered${id}`]) {
-            this.setState({[`filtered${id}`]: false});
+    filterArray = (fieldName) => (e) => {
+        console.log(fieldName);
+        const sort = (cmpFn, array) => {
+            this.setState({currentArray: array.sort(cmpFn)});
+            this.mapData(array);
+        };
+
+        if (this.state[`filtered${fieldName}`]) {
+            this.setState({[`filtered${fieldName}`]: false});
+            const cmpFn = (a,b) => (a[`${fieldName}`] < b[`${fieldName}`]) ? 1 : ((b[`${fieldName}`] < a[`${fieldName}`]) ? -1 : 0);
             if (this.state.currentArray) {
-                const ar = this.state.currentArray.sort((a,b) => (a[`${id}`] < b[`${id}`]) ? 1
-                    : ((b[`${id}`] < a[`${id}`]) ? -1 : 0));
-                this.setState({currentArray: ar});
-                this.mapData(ar);
+                sort(cmpFn, this.state.currentArray)
             } else {
-                const ar = this.props.data.sort((a,b) => (a[`${id}`] < b[`${id}`]) ? 1
-                    : ((b[`${id}`] < a[`${id}`]) ? -1 : 0));
-                this.setState({currentArray: ar});
-                this.mapData(ar);
+                sort(cmpFn, this.props.data)
             }
         } else {
-            this.setState({[`filtered${id}`]: true});
+            this.setState({[`filtered${fieldName}`]: true});
+            const cmpFn = (a,b) => (a[`${fieldName}`] > b[`${fieldName}`]) ? 1 : ((b[`${fieldName}`] > a[`${fieldName}`]) ? -1 : 0);
             if (this.state.currentArray) {
-                const ar = this.state.currentArray.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
-                    : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
-                this.setState({currentArray: ar});
-                this.mapData(ar);
+                sort(cmpFn, this.state.currentArray)
             } else {
-                const ar = this.props.data.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
-                    : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
-                this.setState({currentArray: ar});
-                this.mapData(ar);
+                sort(cmpFn, this.props.data)
             }
         }
     };
@@ -118,35 +112,35 @@ class TableContainer extends React.Component {
                         <Grid item xs={1}>
                             <p className="aero-centred"
                                id='id'
-                               onClick={this.filterArray}>
+                               onClick={this.filterArray('id')}>
                                 ID
                             </p>
                         </Grid>
                         <Grid item xs={2}>
                             <p className="aero-centred"
                                id='firstName'
-                               onClick={this.filterArray}>
+                               onClick={this.filterArray('firstName')}>
                                 First Name
                             </p>
                         </Grid>
                         <Grid item xs={3}>
                             <p className="aero-centred"
                                id='lastName'
-                               onClick={this.filterArray}>
+                               onClick={this.filterArray('lastName')}>
                                 Last Name
                             </p>
                         </Grid>
                         <Grid item xs={3}>
                             <p className="aero-centred"
                                id='email'
-                               onClick={this.filterArray}>
+                               onClick={this.filterArray('email')}>
                                 Email
                             </p>
                         </Grid>
                         <Grid item xs={3}>
                             <p className="aero-centred"
                                id='phone'
-                               onClick={this.filterArray}>
+                               onClick={this.filterArray('phone')}>
                                 Phone
                             </p>
                         </Grid>
@@ -178,3 +172,5 @@ const mapStateToProps = state => {
 };
 
 export default connect(mapStateToProps)(TableContainer);
+
+// TODO разобратся со списком страниц
