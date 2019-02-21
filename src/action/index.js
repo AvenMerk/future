@@ -29,10 +29,8 @@ export const receiveData = (data) => ({
     receivedAt: Date.now()
 });
 
-const getLink = (numberOfElements) =>  {
-    return `http://www.filltext.com/?rows=${numberOfElements}&id={number|1000}&firstName={firstName}&lastName={lastName}
-    &email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}`
-};
+const getLink = (numberOfElements) =>  `http://www.filltext.com/?rows=${numberOfElements}&id={number|1000}` +
+'&firstName={firstName}&lastName={lastName}&email={email}&phone={phone|(xxx)xxx-xx-xx}&address={addressObject}&description={lorem|32}';
 
 export const fetchData = (mode) => (dispatch) => {
     dispatch(requestData());
