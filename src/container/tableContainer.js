@@ -12,8 +12,6 @@ class TableContainer extends React.Component {
     state = {
         currentPage: 0,
         showFields: 50,
-        numberOfPages: 20,
-        pages: [],
     };
 
     componentDidMount() {
@@ -30,20 +28,24 @@ class TableContainer extends React.Component {
         }
     }
 
-    //TODO сделать расчет страниц при выборе большого объема данных
     setNumberOfPages = () => {
-        let pages = [];
-        for (let i = 1; i <= this.state.numberOfPages; i++) {
-            pages.push(i);
+        const { isFetching, data } = this.props;
+        if (!isFetching) {
+            this.setState({numberOfPages: Math.ceil(data.length/50)});
         }
-        this.setState({pages});
     };
 
-    changePage = (e) => {
-        this.setState({currentPage: parseInt(e.target.innerText) - 1});
+    getPagingButtons = () => {
+        const pages = [];
+        for (let i = 1; i<= this.state.numberOfPages; i++) {
+            pages.push(<Button name={i} onClick={this.changePage} key={i}/>)
+        }
+        return pages;
     };
 
-    mapdata = (data) => {
+    changePage = (e) => this.setState({currentPage: parseInt(e.target.innerText) - 1});
+
+    mapData = (data) => {
         const { currentPage, showFields } = this.state;
         const beginning = currentPage*showFields;
         const end = (currentPage + 1)*showFields;
@@ -62,12 +64,12 @@ class TableContainer extends React.Component {
                 const ar = this.state.currentArray.sort((a,b) => (a[`${id}`] < b[`${id}`]) ? 1
                     : ((b[`${id}`] < a[`${id}`]) ? -1 : 0));
                 this.setState({currentArray: ar});
-                this.mapdata(ar);
+                this.mapData(ar);
             } else {
                 const ar = this.props.data.sort((a,b) => (a[`${id}`] < b[`${id}`]) ? 1
                     : ((b[`${id}`] < a[`${id}`]) ? -1 : 0));
                 this.setState({currentArray: ar});
-                this.mapdata(ar);
+                this.mapData(ar);
             }
         } else {
             this.setState({[`filtered${id}`]: true});
@@ -75,12 +77,12 @@ class TableContainer extends React.Component {
                 const ar = this.state.currentArray.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
                     : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
                 this.setState({currentArray: ar});
-                this.mapdata(ar);
+                this.mapData(ar);
             } else {
                 const ar = this.props.data.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
                     : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
                 this.setState({currentArray: ar});
-                this.mapdata(ar);
+                this.mapData(ar);
             }
         }
     };
@@ -102,6 +104,7 @@ class TableContainer extends React.Component {
 
     render() {
         const {data, isFetching} = this.props;
+        const {numberOfPages} = this.state;
         const isEmpty = data.length === 0;
         return <React.Fragment>
             {isEmpty
@@ -110,9 +113,7 @@ class TableContainer extends React.Component {
                         Loading...</Grid> : <Grid item xs={9}>Empty.</Grid>)
                 : <Grid item xs={9}>
                     <h2>Table</h2>
-                    {this.state.pages.map((page, index) =>
-                        <Button name={page} onClick={this.changePage} key={index}/>
-                    )}
+                    {numberOfPages !== 0 && this.getPagingButtons()}
                     <Paper className="aero-flex">
                         <Grid item xs={1}>
                             <p className="aero-centred"
@@ -151,7 +152,7 @@ class TableContainer extends React.Component {
                         </Grid>
                     </Paper>
 
-                    {this.mapdata(data)}
+                    {this.mapData(data)}
                 </Grid>
             }
         </React.Fragment>;
@@ -160,7 +161,6 @@ class TableContainer extends React.Component {
 
 // Функция, определяет что передать из редьюсера в props компоненты
 const mapStateToProps = state => {
-    console.log('=====>', state);
     const {tableDataReducer, selectedMode, searchedField} = state;
     const {
         isFetching,
