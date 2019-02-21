@@ -4,6 +4,8 @@ import { connect } from 'react-redux';
 import TableStroke from "../components/tableStroke";
 import Button from "../components/button";
 import Grid from '@material-ui/core/Grid';
+import Paper from '@material-ui/core/Paper';
+
 
 
 class FullTable extends React.Component {
@@ -59,14 +61,21 @@ class FullTable extends React.Component {
         return <React.Fragment>
             {isEmpty
                 ? (isFetching ?
-                    <h2>
-                        Loading...</h2> : <h2>Empty.</h2>)
+                    <Grid item xs={9}>
+                        Loading...</Grid> : <Grid item xs={9}>Empty.</Grid>)
                 : <Grid item xs={9}>
                     <h2>Table</h2>
                     <Button name="Create array" onClick={this.setNumberOfPages}/>
                     {this.state.pages.map((page, index) =>
-                    <Button name={page} onClick={this.changePage} key={index}/>
+                        <Button name={page} onClick={this.changePage} key={index}/>
                     )}
+                    <Paper className="aero-flex">
+                        <Grid item xs={1}><p className="aero-centred">ID</p></Grid>
+                        <Grid item xs={2}><p className="aero-centred">First Name</p></Grid>
+                        <Grid item xs={3}><p className="aero-centred">Last Name</p></Grid>
+                        <Grid item xs={3}><p className="aero-centred">Email</p></Grid>
+                        <Grid item xs={3}><p className="aero-centred">Phone</p></Grid>
+                    </Paper>
 
                     {this.mapFullData(fullData)}
                 </Grid>
