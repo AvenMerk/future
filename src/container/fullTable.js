@@ -59,11 +59,44 @@ class FullTable extends React.Component {
     filterArray = (e) => {
         const id = e.target.getAttribute('id');
         console.log(id);
-        const ar = this.props.fullData.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
-            : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
-        console.log(this.props.fullData);
-        this.setState({currentArray: ar});
-        this.mapFullData(ar);
+        if (this.state[`filtered${id}`]) {
+            this.setState({[`filtered${id}`]: false});
+            if (this.state.currentArray) {
+                const ar = this.state.currentArray.sort((a,b) => (a[`${id}`] < b[`${id}`]) ? 1
+                    : ((b[`${id}`] < a[`${id}`]) ? -1 : 0));
+                this.setState({currentArray: ar});
+                this.mapFullData(ar);
+            } else {
+                const ar = this.props.fullData.sort((a,b) => (a[`${id}`] < b[`${id}`]) ? 1
+                    : ((b[`${id}`] < a[`${id}`]) ? -1 : 0));
+                this.setState({currentArray: ar});
+                this.mapFullData(ar);
+            }
+        } else {
+            this.setState({[`filtered${id}`]: true});
+            if (this.state.currentArray) {
+                const ar = this.state.currentArray.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
+                    : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
+                this.setState({currentArray: ar});
+                this.mapFullData(ar);
+            } else {
+                const ar = this.props.fullData.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
+                    : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
+                this.setState({currentArray: ar});
+                this.mapFullData(ar);
+            }
+        }
+    };
+
+    searchingField = (array) => {
+        if (this.props.searchedField === "") {
+            return true;
+        } else {
+            const { id, firstName, lastName, email, phone } = array;
+            console.log(id);
+            // const { array } = this.state.currentArray;
+            return id.includes(this.props.searchedField);
+        }
     };
 
     render() {
@@ -127,7 +160,7 @@ class FullTable extends React.Component {
 
 // Функция, определяет что передать из редьюсера в props компоненты
 const mapStateToProps = state => {
-    const {fullReducer, selectedMode} = state;
+    const {fullReducer, selectedMode, searchedField} = state;
     const {
         isFetching,
         lastUpdated,
@@ -138,7 +171,8 @@ const mapStateToProps = state => {
         isFetching,
         fullData,
         lastUpdated,
-        selectedMode
+        selectedMode,
+        searchedField
     }
 };
 

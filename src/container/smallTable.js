@@ -8,6 +8,8 @@ import Paper from '@material-ui/core/Paper';
 
 class SmallTable extends React.Component {
 
+    state = {};
+
     componentDidMount() {
         const { dispatch } = this.props;
         dispatch(fetchData());
@@ -15,12 +17,20 @@ class SmallTable extends React.Component {
 
     filterArray = (e) => {
         const id = e.target.getAttribute('id');
-        console.log(id);
-        const ar = this.props.smallData.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
-            : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
-        this.setState({currentArray: ar});
-        console.log(ar);
-        this.renderArray(ar);
+        if (this.state[`filtered${id}`]) {
+            this.setState({[`filtered${id}`]: false});
+            const ar = this.props.smallData.sort((a,b) => (a[`${id}`] < b[`${id}`]) ? 1
+                : ((b[`${id}`] < a[`${id}`]) ? -1 : 0));
+            this.setState({currentArray: ar});
+            this.renderArray(ar);
+        } else {
+            this.setState({[`filtered${id}`]: true});
+            const ar = this.props.smallData.sort((a,b) => (a[`${id}`] > b[`${id}`]) ? 1
+                : ((b[`${id}`] > a[`${id}`]) ? -1 : 0));
+            this.setState({currentArray: ar});
+            this.renderArray(ar);
+        }
+
     };
 
     renderArray = (smallData) => {

@@ -1,6 +1,5 @@
 import React from 'react';
 import Grid from '@material-ui/core/Grid';
-import Switch from '@material-ui/core/Switch';
 import Radio from '@material-ui/core/Radio';
 import SearchIcon from '@material-ui/icons/Search';
 import InputBase from '@material-ui/core/InputBase';
@@ -10,7 +9,7 @@ import SmallTable from './smallTable';
 
 
 import { connect } from 'react-redux';
-import { selectMode } from '../action';
+import { selectMode, searchField } from '../action';
 
 export const SMALL = 'REQUEST_SMALL';
 export const FULL = 'REQUEST_FULL';
@@ -18,6 +17,8 @@ export const FULL = 'REQUEST_FULL';
 class SearchContainer extends React.Component {
 
     changeMode = event => this.props.dispatch(selectMode(event.target.value));
+
+    searchingField = event => this.props.dispatch(searchField(event.target.value));
 
     render() {
         return (
@@ -47,15 +48,15 @@ class SearchContainer extends React.Component {
                                 <label>FULL</label><br />
                             </form>
 
-                            {/*<div className="aero-search-field-container">*/}
-                                {/*<InputBase placeholder="Поиск по номеру рейса"*/}
-                                           {/*className="aero-search-input-field"*/}
-                                           {/*onChange={this.searchingFlight}*/}
-                                {/*/>*/}
-                                {/*<IconButton aria-label="Search">*/}
-                                    {/*<SearchIcon />*/}
-                                {/*</IconButton>*/}
-                            {/*</div>*/}
+                            <div className="aero-search-field-container">
+                                <InputBase placeholder="Поиск"
+                                           className="aero-search-input-field"
+                                           onChange={this.searchingField}
+                                />
+                                <IconButton aria-label="Search">
+                                    <SearchIcon />
+                                </IconButton>
+                            </div>
                         </div>
                     </div>
                 </Grid>
@@ -67,9 +68,10 @@ class SearchContainer extends React.Component {
 }
 
 const mapStateToProps = state => {
-    const { selectedMode } = state;
+    const { selectedMode, searchedField } = state;
     return {
         selectedMode,
+        searchedField
     };
 };
 
