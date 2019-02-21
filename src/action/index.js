@@ -5,11 +5,19 @@ export const RECEIVE_SMALL = 'RECEIVE_SMALL';
 export const REQUEST_FULL = 'REQUEST_FULL';
 export const RECEIVE_FULL = 'RECEIVE_FULL';
 export const SELECT_MODE = 'SELECT_MODE';
+export const SEARCH_FIELD = 'SEARCH_FIELD';
 
 export const selectMode = mode => {
     return {
         type: SELECT_MODE,
         mode
+    }
+};
+
+export const searchField = substring => {
+    return {
+        type: SEARCH_FIELD,
+        substring
     }
 };
 
