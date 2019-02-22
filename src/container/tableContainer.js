@@ -12,6 +12,7 @@ class TableContainer extends React.Component {
     state = {
         currentPage: 0,
         showFields: 50,
+        currentArray: this.props.data,
     };
 
     componentDidMount() {
@@ -25,13 +26,14 @@ class TableContainer extends React.Component {
             const { dispatch, selectedMode } = this.props;
             dispatch(fetchData(selectedMode));
             this.setNumberOfPages();
+            this.setState({currentArray: this.props.data})// TODO нужно ли тут setState?
         }
     }
 
     setNumberOfPages = () => {
         const { isFetching, data } = this.props;
         if (!isFetching) {
-            this.setState({numberOfPages: Math.ceil(data.length/50)});
+            this.setState({numberOfPages: Math.ceil(data.length/this.state.showFields)});
         }
     };
 
@@ -49,7 +51,7 @@ class TableContainer extends React.Component {
         const { currentPage, showFields } = this.state;
         const beginning = currentPage*showFields;
         const end = (currentPage + 1)*showFields;
-        const newData = data.slice(beginning, end);
+        const newData = data.filter(this.searchingField).slice(beginning, end);
         return newData.map((data, index) =>
                 <TableStroke data={data} key={index} />
         );
@@ -62,34 +64,29 @@ class TableContainer extends React.Component {
             this.mapData(array);
         };
 
+        // TODO вот это можно слить в одно
         if (this.state[`filtered${fieldName}`]) {
             this.setState({[`filtered${fieldName}`]: false});
             const cmpFn = (a,b) => (a[`${fieldName}`] < b[`${fieldName}`]) ? 1 : ((b[`${fieldName}`] < a[`${fieldName}`]) ? -1 : 0);
-            if (this.state.currentArray) {
-                sort(cmpFn, this.state.currentArray)
-            } else {
-                sort(cmpFn, this.props.data)
-            }
+            sort(cmpFn, this.state.currentArray)
         } else {
             this.setState({[`filtered${fieldName}`]: true});
             const cmpFn = (a,b) => (a[`${fieldName}`] > b[`${fieldName}`]) ? 1 : ((b[`${fieldName}`] > a[`${fieldName}`]) ? -1 : 0);
-            if (this.state.currentArray) {
-                sort(cmpFn, this.state.currentArray)
-            } else {
-                sort(cmpFn, this.props.data)
-            }
+            sort(cmpFn, this.state.currentArray)
         }
     };
 
-    searchingField = (array) => {
+    searchingField = (element) => {
         if (this.props.searchedField === "") {
             return true;
-        } else {
-            const { id, firstName, lastName, email, phone } = array;
-            console.log(id);
-            // const { array } = this.state.currentArray;
-            return id.includes(this.props.searchedField);
         }
+
+        const { id, firstName, lastName, email, phone } = element;
+        return id.toString().includes(this.props.searchedField) ||
+            firstName.toUpperCase().includes(this.props.searchedField.toUpperCase()) ||
+            lastName.toUpperCase().toString().includes(this.props.searchedField.toUpperCase()) ||
+            email.toString().toUpperCase().includes(this.props.searchedField.toUpperCase()) ||
+            phone.toString().includes(this.props.searchedField);
     };
 
     moreInfo = (data) => {
@@ -97,9 +94,9 @@ class TableContainer extends React.Component {
     };
 
     render() {
-        const {data, isFetching} = this.props;
-        const {numberOfPages} = this.state;
-        const isEmpty = data.length === 0;
+        const { isFetching } = this.props;
+        const {numberOfPages, currentArray} = this.state;
+        const isEmpty = currentArray.length === 0;
         return <React.Fragment>
             {isEmpty
                 ? (isFetching ?
@@ -107,7 +104,7 @@ class TableContainer extends React.Component {
                         Loading...</Grid> : <Grid item xs={9}>Empty.</Grid>)
                 : <Grid item xs={9}>
                     <h2>Table</h2>
-                    {numberOfPages !== 0 && this.getPagingButtons()}
+                    {/*{numberOfPages !== 0 && this.getPagingButtons()}*/}
                     <Paper className="aero-flex">
                         <Grid item xs={1}>
                             <p className="aero-centred"
@@ -146,7 +143,7 @@ class TableContainer extends React.Component {
                         </Grid>
                     </Paper>
 
-                    {this.mapData(data)}
+                    {this.mapData(currentArray)}
                 </Grid>
             }
         </React.Fragment>;
@@ -174,3 +171,5 @@ const mapStateToProps = state => {
 export default connect(mapStateToProps)(TableContainer);
 
 // TODO разобратся со списком страниц
+// TODO переименовать TableStroke
+// TODO использовать везде this.state.currentArray (хранить его в валидном состоянии)
